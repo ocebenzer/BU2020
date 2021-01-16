@@ -2,7 +2,7 @@ module Main();
 
 reg clk;
 
-// temporary hard-code
+// temporary hard-codexxxx
 wire[15:0] instruction_bus;
 assign instruction_bus = 16'b1100001000110010; // Move Immediate, D0 50(decimal)
 
