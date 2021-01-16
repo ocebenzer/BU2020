@@ -13,7 +13,7 @@ module BU2020(input clk, inout[15:0] instruction_bus);
 	
 	initial begin
 		// Initially all registers but BA will be 0x0000, BA will be 0x0040 since the Base Address starts from 0x0040
-		registers <= 176'h000000000040000000000000000000000000000000000000;
+		registers <= 176'h00000040000000000000000000000000000000000000;
 	end
 
 	always @(posedge clk) begin

@@ -4,3 +4,4 @@ output.vvp
 TimingDiagram.vcd
 TimingDiagram.vcd.old
 *.zip
+debug.log
