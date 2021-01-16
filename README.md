@@ -1,16 +1,7 @@
 # BU2020
-beni oku
+cmpe344.02 fall2020 term project#1
 
-hüü
-
-_sjsjs_
-
-**mdmd**
-
-* asd
-* asdf
-```
-
-asd
-
-```
+### PDFs
+* [term project list](https://github.com/ocebenzer/BU2020/blob/main/FinalProject.pdf)
+* [detailed description](https://github.com/ocebenzer/BU2020/blob/main/Appendix%20A.pdf)
+* [project report](https://github.com/ocebenzer/BU2020/blob/main/Project-Report.pdf)
