@@ -27,6 +27,7 @@ assign write_mode = write_mode_reg;
 Memory memory(address_bus, data_bus, clk, write_mode);
 BU2020 cpu(clk, instruction_bus);
 
+
 initial begin
 	$dumpfile("TimingDiagram.vcd");
 	$dumpvars(0, memory, data_bus, address_bus, data_bus_reg, address_bus_reg, clk);
