@@ -51,7 +51,7 @@ module BU2020 (
 		STAGE_IF	_IF(clk, if_in, if_out, Instruction_addressbus, Instruction_databus, pc_from, pc_to);
 		STAGE_ID	_ID(clk, id_in, id_out, wb_out);
 		STAGE_EX	_EX(clk, ex_in, ex_out);
-		STAGE_MEM	_MEM(clk, mem_in, mem_out);
+		STAGE_MEM	_MEM(clk, mem_in, mem_out, Memory_addressbus, Memory_databus, Memory_writemode);
 		STAGE_WB	_WB(clk, wb_in, wb_out);
 
 	// Connect Stages
