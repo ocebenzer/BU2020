@@ -3,7 +3,7 @@ copy output.vvp output.vvp.old
 del TimingDiagram.vcd
 del output.vvp
 
-iverilog -o output.vvp main.v BU2020.v Memory.v
+iverilog -o output.vvp main.v BU2020.v Memory.v Stages.v
 vvp output.vvp
 
 if exist TimingDiagram.vcd (

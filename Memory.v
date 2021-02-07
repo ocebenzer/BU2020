@@ -1,4 +1,6 @@
-module Memory(input[11:0] address_bus, inout[15:0] data_bus, input clk, write_mode);
+`timescale 1ns/1ns
+
+module Memory(input clk, input[11:0] address_bus, inout[15:0] data_bus, input write_mode);
 
 	// 4KB Memory, 4x1KB modules, first module is instruction module, rest 3 are data modules
 	reg[511:0][15:0] data_instruction = 0;
