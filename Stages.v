@@ -12,7 +12,23 @@ module Registers (
 	//TODO
 endmodule
 
-module STAGE_IF (input clk, input[15:0] if_in, output[1:0][15:0] if_out);
+module STAGE_IF (
+	input clk,
+	input[15:0] if_in,
+	output[1:0][15:0] if_out,
+	output[11:0] Instruction_addressbus,
+	input[15:0] Instruction_databus,
+	input[15:0] PC_from,
+	output[15:0] PC_to
+	);
+
+	reg tmp = 0;//TODO MUX
+
+	assign PC_to = tmp ? if_in : PC_from + 2;
+
+	assign Instruction_addressbus = PC_from;
+	assign if_out[0] = PC_from;
+	assign if_out[1] = Instruction_databus;
 	
 endmodule
 

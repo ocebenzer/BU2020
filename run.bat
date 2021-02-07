@@ -1,3 +1,4 @@
+cls
 copy TimingDiagram.vcd TimingDiagram.vcd.old
 copy output.vvp output.vvp.old
 del TimingDiagram.vcd

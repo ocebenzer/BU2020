@@ -2,7 +2,7 @@
 
 module Main();
 
-reg clk;
+reg clk = 0;
 reg[3:0] cycle;
 
 // temporary hard-code START
@@ -27,17 +27,17 @@ reg[3:0] cycle;
 	// assign write_mode = write_mode_reg;
 // temporary hard-code END
 
-wire[11:0] address_bus;
-wire[15:0] data_bus;
+wire[11:0] address_bus, Instruction_addressbus;
+wire[15:0] data_bus, Instruction_databus;
 wire write_mode;
 
-Memory memory(clk, address_bus, data_bus, write_mode);
-BU2020 cpu(clk, address_bus, data_bus, write_mode);
+Memory memory(clk, address_bus, data_bus, write_mode, Instruction_addressbus, Instruction_databus);
+BU2020 cpu(clk, address_bus, data_bus, write_mode, Instruction_addressbus, Instruction_databus);
 
 
 initial begin
 	$dumpfile("TimingDiagram.vcd");
-	$dumpvars(0, cycle, memory, cpu, data_bus, address_bus, write_mode);
+	$dumpvars(0, cycle, memory, cpu, Instruction_addressbus, Instruction_databus, address_bus, data_bus, write_mode);
 
  	// write_mode_reg <= 1'b1;
 
@@ -62,11 +62,11 @@ initial begin
 	$finish;
 end
 
-always begin	
+always begin
+    #1;
 	clk = 0;
 	#1;
     clk = 1;
-    #1;
 end
 
 always begin
