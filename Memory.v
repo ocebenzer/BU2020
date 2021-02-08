@@ -16,7 +16,43 @@ module Memory(
 	reg[511:0][15:0] data3 = 0;
 	
 	initial begin
-		data_instruction[15:0] = 256'h0000111122223333444455556666777788889999aaaabbbbccccddddeeeeffff;
+	//Instruction Initialization
+
+		//0000 010 011 100 XXX, 04E0h Add R010 R011 R100
+		data_instruction[0] = 16'h04E0;
+		//0001 010 011 000110, 14C6h Add R010 R011 memory(BA+"6")
+		data_instruction[1] = 16'h14C6;
+		//0010 010 011 100 XXX, 24E0h Sub R010 R011 R100
+		data_instruction[2] = 16'h24E0;
+		//0011 010 011 000110, 34C6h Addi R010 R011  "6"
+		data_instruction[3] = 16'h34C6;
+		//0100 010 011 100 XXX, 44E0h Mul R010 R011 R100
+		data_instruction[4] = 16'h44E0;
+		//0101 010 011 100 XXX, 54E0h And R010 R011 R100
+		data_instruction[5] = 16'h54E0;
+		//0110 010 000001001, 6409h Sll R010 "9"
+		data_instruction[6] = 16'h6409;
+		//0111 010 000001001, 7409h Lw R010 "9"
+		data_instruction[7] = 16'h7409;
+		//1000 010 000001001, 8409h Lwi R010 "9"
+		data_instruction[8] = 16'h8409;
+		//1001 010 000001001, 9409h Sw R010 "9"
+		data_instruction[9] = 16'h9409;
+		//1010 010 000001001, A409h Swi R010 "9"
+		data_instruction[10] = 16'hA409;
+		//1011 010 XXXXXXXXX, B400h CLR R010
+		data_instruction[11] = 16'hB400;
+		//1100 010 000001001, C409h Mov R010 "9"
+		data_instruction[12] = 16'hC409;
+		//1101 XXX 011 100 XXX, D0E0h CMP R011 R100
+		data_instruction[13] = 16'hD0E0;
+		//1110 000000001100, E00Ch Bne "2x12"
+		data_instruction[14] = 16'hE00C;
+		//1111 000000001100, F4ECh Jmp "2x12"
+		data_instruction[15] = 16'hF00C;
+
+	// Memory Initialization
+
 		data3[510] <= 16'habcd;
 	end
 
