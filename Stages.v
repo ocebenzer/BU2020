@@ -27,7 +27,8 @@ module Control (
 		#4;
 		test = 9'b000011100; // hex 01C
 	end
-	
+
+	//TODO
 endmodule
 
 module STAGE_IF (
@@ -126,12 +127,9 @@ module STAGE_MEM (
 	output Memory_writemode,
 	input[2:0] mem_control_input
 	);
-	
-	assign Memory_writemode = 0;//TODO Controller
 
 	assign Memory_addressbus = mem_in[2];
-	assign Memory_databus = Memory_writemode ? mem_in[2] : 'bz;
-
+	assign Memory_databus = mem_control_input[2] ? mem_in[2] : 'bz;
 
 	assign mem_out[0] = Memory_databus;
 	assign mem_out[1] = mem_in[2];
