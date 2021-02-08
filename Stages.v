@@ -2,8 +2,8 @@
 
 module Registers (
 	input clk,
-	input[3:0] read1,
-	input[3:0] read2,
+	input[2:0] read1,
+	input[2:0] read2,
 	input[15:0] write_data,
 	input[2:0] write_address,
 	output[15:0] data1,
@@ -11,6 +11,8 @@ module Registers (
 	input register_write
 );
 	//TODO
+	assign data1 = 16'h4444;
+	assign data2 = 16'h5555;
 endmodule
 
 module Control (
@@ -66,11 +68,11 @@ module STAGE_ID (
 
 // Connect Registers-ID
 	wire[15:0] reg_data1, reg_data2;
-	wire[3:0] reg_read1, reg_read2;
+	wire[2:0] reg_read1, reg_read2;
 
 	//TODO slayttaki örnek 32 bit, bizim yapmamız gereken 16-bit, son bir defa doğru olduğuna kontrol et
-	assign reg_read1 = id_in[1][5:3];
-	assign reg_read2 = id_in[1][8:6];
+	assign reg_read1 = id_in[1][8:6];
+	assign reg_read2 = id_in[1][5:3];
 	assign id_out[1] = reg_data1;
 	assign id_out[2] = reg_data2;
 
@@ -78,7 +80,10 @@ module STAGE_ID (
 
 // Pass Other Instructions
 
-	assign id_out[3] = 0; // Immediate_Generator TODO
+	assign id_out[3] =
+		(id_in[1][15:12] < 4) ? id_in[1][5:0]
+		: (id_in[1][15:12] > 13) ? id_in[1][11:0]
+		: id_in[1][8:0];
 	assign id_out[4] =id_in[1][15:0]; //TODO Handle ALU Control Input later
 	assign id_out[5] =id_in[1][11:9];
 
@@ -95,6 +100,11 @@ module STAGE_ID (
 		// 1 bit ALU Src
 
 	Control control(id_in[1][15:12], control_output);
+
+	
+	//Dummy wire to see reg_write on GTKWave
+	wire[2:0] reg_writeTo;
+	assign reg_writeTo = id_in[1][11:9];
 endmodule
 
 module STAGE_EX (
@@ -126,6 +136,7 @@ module STAGE_MEM (
 	inout[15:0] Memory_databus,
 	output Memory_writemode,
 	input[2:0] mem_control_input
+	//TODO ADD output PCSrc
 	);
 
 	assign Memory_addressbus = mem_in[2];
@@ -134,6 +145,7 @@ module STAGE_MEM (
 	assign mem_out[0] = Memory_databus;
 	assign mem_out[1] = mem_in[2];
 	assign mem_out[2] = mem_in[4];
+	//TODO Memory needs 1 cycle to read, might be a problem
 endmodule
 
 module STAGE_WB (

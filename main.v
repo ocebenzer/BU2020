@@ -3,7 +3,7 @@
 module Main();
 
 reg clk = 0;
-reg[3:0] cycle;
+reg[15:0] cycle = 0;
 
 // temporary hard-code START
 	// wire[15:0] instruction_bus;
@@ -57,7 +57,7 @@ initial begin
  	// write_mode_reg <= 1'b0;
 	// address_bus_reg <= 12'hffc;
 
-	#20
+	#40
 
 	$finish;
 end
@@ -70,11 +70,8 @@ always begin
 end
 
 always begin
-	cycle = 4'b1010;
+	cycle = cycle + 1;
 	#2;
-	cycle = 4'b1011;
-	#2;
-
 end
 
 endmodule
