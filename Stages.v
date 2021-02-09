@@ -12,7 +12,7 @@ module Registers (
 );
 	//TODO
 	assign data1 = 16'h4444;
-	assign data2 = 16'h5555;
+	assign data2 = 16'h2;
 endmodule
 
 module Control (
@@ -22,13 +22,23 @@ module Control (
 
 	reg[8:0] test;
 
-	assign control_output = test;
+	assign control_output[8] = 0;
+	assign control_output[7:5] = (opcode < 7) ? opcode[2:0] : 3'b000; // ADD as default, 3'b111 is nto used
 
-	initial begin
-		test <= 9'b111100011; // hex 1E3
-		#4;
-		test = 9'b000011100; // hex 01C
-	end
+	assign control_output[4] = 0;
+	assign control_output[3] = 0;
+	assign control_output[2] = 0;
+
+	assign control_output[1] = 0;
+	assign control_output[0] = 0;
+
+	//assign control_output = test;
+
+	// initial begin
+	// 	test <= 9'b111100011; // hex 1E3
+	// 	#4;
+	// 	test = 9'b000011100; // hex 01C
+	// end
 
 	//TODO
 endmodule
@@ -88,14 +98,14 @@ module STAGE_ID (
 	assign id_out[5] =id_in[1][11:9];
 
 // Control Output
-	// WB
+	// WB [1:0]
 		// 1 bit RegWrite
 		// 1 bit MemToReg
-	// MEM
+	// MEM [4:2]
 		// 1 bit SimpleJump
 		// 1 bit BNE Jump
 		// 1 bit MemWrite, also works as MemRead
-	// EX
+	// EX [8:5]
 		// 3 bit ALU Op
 		// 1 bit ALU Src
 
@@ -118,9 +128,7 @@ module STAGE_EX (
 	wire[15:0] ALU_input2 = ex_control_input[3] ? ex_in[3] : ex_in[2]; //TODO IMMEDIATE???
 	wire[15:0] ALU_zero, ALU_result;
 
-	wire[2:0] ALU_control_output; //TODO Handle ALU Control Output
-
-	ALU alu(ex_in[1], ALU_input2, ALU_zero, ALU_result, ALU_control_output);
+	ALU alu(ex_in[1], ALU_input2, ALU_zero, ALU_result, ex_control_input[2:0]);
 
 	assign ex_out[1] = ALU_zero;
 	assign ex_out[2] = 16'hFFFD; //ALU_result; TEMPORARY HARD CODE
@@ -136,7 +144,8 @@ module STAGE_MEM (
 	inout[15:0] Memory_databus,
 	output Memory_writemode,
 	input[2:0] mem_control_input
-	//TODO ADD output PCSrc
+	//TODO Add output PCSrc
+	//TODO Add input doubleRead Control path
 	);
 
 	assign Memory_addressbus = mem_in[2];
