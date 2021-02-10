@@ -57,7 +57,7 @@ initial begin
  	// write_mode_reg <= 1'b0;
 	// address_bus_reg <= 12'hffc;
 
-	#40
+	#4000
 
 	$finish;
 end

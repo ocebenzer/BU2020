@@ -12,7 +12,7 @@ module Registers (
 );
 	//TODO
 	assign data1 = 16'h4444;
-	assign data2 = 16'h8002;
+	assign data2 = 16'h4444;
 endmodule
 
 module Control (
@@ -20,27 +20,32 @@ module Control (
 	output[8:0] control_output
 	);
 
-	reg[8:0] test;
+// Control Output Guide
+	// EX output[8:5]
+		// [3] -> 1 bit ALU Src
+		// [2:0] -> 3 bit ALU Op
+	// MEM output[4:2]
+		// [2] -> 1 bit MemWrite, also works as MemRead
+		// [1] -> 1 bit BNE Jump
+		// [0] -> 1 bit Simple Jump
+	// WB output[1:0]
+		// [1] -> 1 bit MemToReg
+		// [0] -> 1 bit RegWrite
 
-	assign control_output[8] = 0;
-	assign control_output[7:5] = (opcode < 7) ? opcode[2:0] : 3'b000; // ADD as default, 3'b111 is nto used
+
+	assign control_output[8] = (
+		opcode == 3
+		|| opcode >= 6 && opcode <= 10
+		) ? 1 : 0;
+	assign control_output[7:5] = (opcode < 8) ? opcode[2:0] :
+												(opcode == 13)	? 3'b010 : 3'b000;
 
 	assign control_output[4] = 0;
-	assign control_output[3] = 0;
-	assign control_output[2] = 0;
+	assign control_output[3] = (opcode == 4'he);
+	assign control_output[2] = (opcode == 4'hf);
 
 	assign control_output[1] = 0;
 	assign control_output[0] = 0;
-
-	//assign control_output = test;
-
-	// initial begin
-	// 	test <= 9'b111100011; // hex 1E3
-	// 	#4;
-	// 	test = 9'b000011100; // hex 01C
-	// end
-
-	//TODO
 endmodule
 
 module STAGE_IF (
@@ -51,7 +56,7 @@ module STAGE_IF (
 	input[15:0] Instruction_databus,
 	input[15:0] PC_from,
 	output[15:0] PC_to,
-	input PCSrc // TODO handle PCSrc for both "Simple Jump" and "BNE Jump"
+	input PCSrc
 	);
 
 
@@ -74,7 +79,7 @@ module STAGE_ID (
 	);
 
 // Pass PC
-	assign id_out[0] = id_in[0];
+	assign id_out[0] = (id_in[1][15:12] == 4'hf) ? 0 : id_in[0]; // if simple jump, we send 0 as the next PC
 
 // Connect Registers-ID
 	wire[15:0] reg_data1, reg_data2;
@@ -123,9 +128,10 @@ module STAGE_EX (
 	output[4:0][15:0] ex_out,
 	input[3:0] ex_control_input
 	);
-	assign ex_out[0] = ex_in[0] + ex_in[3]; //TODO IMMEDIATE???
 
-	wire[15:0] ALU_input2 = ex_control_input[3] ? ex_in[3] : ex_in[2]; //TODO IMMEDIATE???
+	assign ex_out[0] = ex_in[0] + ex_in[3];
+
+	wire[15:0] ALU_input2 = ex_control_input[3] ? ex_in[3] : ex_in[2];
 	wire[15:0] ALU_status, ALU_result;
 
 	ALU alu(ex_in[1], ALU_input2, ALU_status, ALU_result, ex_control_input[2:0]);
@@ -143,10 +149,14 @@ module STAGE_MEM (
 	output[11:0] Memory_addressbus,
 	inout[15:0] Memory_databus,
 	output Memory_writemode,
-	input[2:0] mem_control_input
-	//TODO Add output PCSrc
+	input[2:0] mem_control_input,
+	input z_flag,
+	output PCSrc
 	//TODO Add input doubleRead Control path
 	);
+
+	assign PCSrc = (mem_control_input[0] == 1) ? 1
+					: (mem_control_input[1] == 1) ? z_flag : 0;
 
 	assign Memory_addressbus = mem_in[2];
 	assign Memory_databus = mem_control_input[2] ? mem_in[2] : 'bz;

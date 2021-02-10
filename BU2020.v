@@ -30,7 +30,7 @@ module BU2020 (
 		end
 
 	// Registers between stages
-		reg[1:0][15:0] IF_ID;
+		reg[1:0][15:0] IF_ID = 0;
 		// If_ID[0] -> PC
 		// IF_ID[1] -> Instruction
 
@@ -73,14 +73,14 @@ module BU2020 (
 		// [2:0] -> 3 bit ALU Op
 		// [3] -> 1 bit ALU Src
 
-		reg[1:0] ID_EX__WB;
-		reg[2:0] ID_EX__MEM;
-		reg[3:0] ID_EX__EX;
+		reg[1:0] ID_EX__WB = 0;
+		reg[2:0] ID_EX__MEM = 0;
+		reg[3:0] ID_EX__EX = 0;
 
-		reg[1:0] EX_MEM__WB;
-		reg[2:0] EX_MEM__MEM;
+		reg[1:0] EX_MEM__WB = 0;
+		reg[2:0] EX_MEM__MEM = 0;
 
-		reg[1:0] MEM_WB__WB;
+		reg[1:0] MEM_WB__WB = 0;
 
 		wire[8:0] id_control_output;
 		wire[3:0] ex_control_input;
@@ -91,13 +91,13 @@ module BU2020 (
 		assign mem_control_input = EX_MEM__MEM;
 		assign wb_control_input = MEM_WB__WB;
 
-		wire tmp = 0; //TODO Handle Jump
+		wire pc_src;
 
 	// Register Stages
-		STAGE_IF	_IF(clk, if_in, if_out, Instruction_addressbus, Instruction_databus, pc_from, pc_to, tmp);
+		STAGE_IF	_IF(clk, if_in, if_out, Instruction_addressbus, Instruction_databus, pc_from, pc_to, pc_src);
 		STAGE_ID	_ID(clk, id_in, id_out, wb_out_data, wb_out_reg_address, id_control_output, wb_control_input[0]);
 		STAGE_EX	_EX(clk, ex_in, ex_out, ex_control_input);
-		STAGE_MEM	_MEM(clk, mem_in, mem_out, Memory_addressbus, Memory_databus, Memory_writemode, mem_control_input);
+		STAGE_MEM	_MEM(clk, mem_in, mem_out, Memory_addressbus, Memory_databus, Memory_writemode, mem_control_input, _SR[3], pc_src);
 		STAGE_WB	_WB(clk, wb_in, wb_out_data, wb_out_reg_address, wb_control_input);
 
 	// Connect Stages

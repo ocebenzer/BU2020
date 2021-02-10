@@ -3,7 +3,7 @@ module ALU (
 	input signed [15:0] data2,
 	output[15:0] status_reg,
 	output[15:0] result,
-	input[2:0] ALU_control_output
+	input[2:0] ALU_control_input
 );
 	reg signed[15:0] outpt;
 	reg[3:0] flags;
@@ -16,7 +16,7 @@ module ALU (
 	assign mul = data1*data2;
 
 	always @ * begin
-		case (ALU_control_output)
+		case (ALU_control_input)
 			3'b000: outpt <= data1 + data2;
 			3'b001: outpt <= data1 + data2; //How are we suppose to do this
 			3'b010: outpt <= data1 - data2;
@@ -24,8 +24,7 @@ module ALU (
 			3'b100: outpt <= mul[15:0];
 			3'b101: outpt <= data1 & data2;
 			3'b110: outpt <= data1 << data2;
-			3'b111: outpt <= data1;
-			default: outpt <= data1 + data2;
+			3'b111: outpt <= data2;
 		endcase
 	// handle status register
 		flags[3] <= outpt == 0;
