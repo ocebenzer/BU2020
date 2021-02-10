@@ -14,11 +14,19 @@ module BU2020 (
 		reg[15:0] PC = 16'h0000;
 		// Wires: "From PC" and "To PC"
 		wire[15:0] pc_from, pc_to;
-
 		assign pc_from = PC;
+
+		//Status register
+		reg[15:0] SR;
+		wire[3:0] _SR = SR[15:12];
+		// Wires: "From SR" and "To SR"
+		wire[15:0] sr_from, sr_to;
+		assign sr_from = SR;
+		assign sr_to = EX_MEM[1];
 
 		always @(posedge clk) begin
 			PC <= pc_to;
+			SR <= sr_to;
 		end
 
 	// Registers between stages

@@ -12,7 +12,7 @@ module Registers (
 );
 	//TODO
 	assign data1 = 16'h4444;
-	assign data2 = 16'h2;
+	assign data2 = 16'h8002;
 endmodule
 
 module Control (
@@ -126,11 +126,11 @@ module STAGE_EX (
 	assign ex_out[0] = ex_in[0] + ex_in[3]; //TODO IMMEDIATE???
 
 	wire[15:0] ALU_input2 = ex_control_input[3] ? ex_in[3] : ex_in[2]; //TODO IMMEDIATE???
-	wire[15:0] ALU_zero, ALU_result;
+	wire[15:0] ALU_status, ALU_result;
 
-	ALU alu(ex_in[1], ALU_input2, ALU_zero, ALU_result, ex_control_input[2:0]);
+	ALU alu(ex_in[1], ALU_input2, ALU_status, ALU_result, ex_control_input[2:0]);
 
-	assign ex_out[1] = ALU_zero;
+	assign ex_out[1] = ALU_status;
 	assign ex_out[2] = 16'hFFFD; //ALU_result; TEMPORARY HARD CODE
 	assign ex_out[3] = ex_in[2];
 	assign ex_out[4] = ex_in[5];
