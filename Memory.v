@@ -19,7 +19,7 @@ module Memory(
 	//Instruction Initialization
 
 		//0000 010 011 100 XXX, 04E0h Add R010 R011 R100
-		data_instruction[0] = 16'h04E0;
+		data_instruction[0] = 16'hF190; //16'h04E0;
 		//0001 010 011 000110, 14C6h Add R010 R011 memory(BA+"6")
 		data_instruction[10] = 16'h14C6;
 		//0010 010 011 100 XXX, 24E0h Sub R010 R011 R100
@@ -50,6 +50,9 @@ module Memory(
 		data_instruction[140] = 16'hE100;
 		//1111 000000000000, F4ECh Jmp "2x0"
 		data_instruction[150] = 16'hF000;
+
+		data_instruction[200] = 16'hD0E0;
+		data_instruction[201] = 16'hE100;
 
 	// Memory Initialization
 

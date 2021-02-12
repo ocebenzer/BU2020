@@ -12,7 +12,7 @@ module Registers (
 );
 	//TODO
 	assign data1 = 16'h4444;
-	assign data2 = 16'h4444;
+	assign data2 = 16'h4443;
 endmodule
 
 module Control (
@@ -156,7 +156,7 @@ module STAGE_MEM (
 	);
 
 	assign PCSrc = (mem_control_input[0] == 1) ? 1
-					: (mem_control_input[1] == 1) ? z_flag : 0;
+					: (mem_control_input[1] == 1) ? !z_flag : 0;
 
 	assign Memory_addressbus = mem_in[2];
 	assign Memory_databus = mem_control_input[2] ? mem_in[2] : 'bz;
