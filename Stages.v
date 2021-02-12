@@ -10,9 +10,29 @@ module Registers (
 	output[15:0] data2,
 	input register_write
 );
-	//TODO
-	assign data1 = 16'h4444;
-	assign data2 = 16'h4443;
+//Registers
+	// registers[0] -> BA
+	// registers[3:1] -> Address Registers
+	// registers[7:4] -> Data Registers
+	reg[7:0][15:0] registers = 0;
+
+	// Handle register read
+	assign data1 = registers[read1];
+	assign data2 = registers[read2];
+
+	// Handle register write
+	always @(posedge clk) begin
+		case (register_write)
+			1'b1: registers[write_address] <= write_data;
+		endcase
+	end
+
+	// Initial register values
+	initial begin
+		registers[0] <= 16'h0040; // BA starts from 0x0040
+		registers[1] <= 16'h4444;
+		registers[2] <= 16'h4443;
+	end
 endmodule
 
 module Control (
@@ -45,7 +65,9 @@ module Control (
 	assign control_output[2] = (opcode == 4'hf);
 
 	assign control_output[1] = 0;
-	assign control_output[0] = 0;
+	assign control_output[0] = (opcode == 4'h0
+	|| opcode == 4'h1
+	);
 endmodule
 
 module STAGE_IF (
@@ -129,7 +151,9 @@ module STAGE_EX (
 	input[3:0] ex_control_input
 	);
 
-	assign ex_out[0] = ex_in[0] + ex_in[3];
+	wire signed [15:0] addition = ex_in[3];
+
+	assign ex_out[0] = ex_in[0] + 2*addition;
 
 	wire[15:0] ALU_input2 = ex_control_input[3] ? ex_in[3] : ex_in[2];
 	wire[15:0] ALU_status, ALU_result;
@@ -137,7 +161,7 @@ module STAGE_EX (
 	ALU alu(ex_in[1], ALU_input2, ALU_status, ALU_result, ex_control_input[2:0]);
 
 	assign ex_out[1] = ALU_status;
-	assign ex_out[2] = 16'hFFFD; //ALU_result; TEMPORARY HARD CODE
+	assign ex_out[2] = ALU_result;
 	assign ex_out[3] = ex_in[2];
 	assign ex_out[4] = ex_in[5];
 endmodule

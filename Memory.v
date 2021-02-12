@@ -18,8 +18,11 @@ module Memory(
 	initial begin
 	//Instruction Initialization
 
+ 		//jump to decimal 400 instructions, pass the next 15 instructions
+		data_instruction[0] = 16'hF0C8;
+
 		//0000 010 011 100 XXX, 04E0h Add R010 R011 R100
-		data_instruction[0] = 16'hF190; //16'h04E0;
+		data_instruction[5] = 16'h04E0;
 		//0001 010 011 000110, 14C6h Add R010 R011 memory(BA+"6")
 		data_instruction[10] = 16'h14C6;
 		//0010 010 011 100 XXX, 24E0h Sub R010 R011 R100
@@ -46,14 +49,20 @@ module Memory(
 		data_instruction[120] = 16'hC409;
 		//1101 XXX 011 100 XXX, D0E0h CMP R011 R100
 		data_instruction[130] = 16'hD0E0;
-		//1110 000100000000, E00Ch Bne "2x256"
+		//1110 000100000000, E00Ch Bne "Pc + 2x256"
 		data_instruction[140] = 16'hE100;
 		//1111 000000000000, F4ECh Jmp "2x0"
 		data_instruction[150] = 16'hF000;
 
-		data_instruction[200] = 16'hD0E0;
-		data_instruction[201] = 16'hE100;
+	// decimal 400 instructions start here
 
+		//0000 011 010 001 XXX, 04E0h Add 011 010 001
+		data_instruction[200] = 16'h0688;
+
+		/*
+		data_instruction[200] = 16'hD050; // CMP R010 R001
+		data_instruction[201] = 16'hEFFF; // Bne (Pc + 2 x "-1")
+		*/
 	// Memory Initialization
 
 		data3[510] <= 16'habcd;

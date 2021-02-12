@@ -30,7 +30,7 @@ module BU2020 (
 		end
 
 	// Registers between stages
-		reg[1:0][15:0] IF_ID = 0;
+		reg[1:0][15:0] IF_ID = 32'hD0000000;
 		// If_ID[0] -> PC
 		// IF_ID[1] -> Instruction
 
