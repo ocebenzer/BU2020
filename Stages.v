@@ -32,6 +32,11 @@ module Registers (
 		registers[0] <= 16'h0040; // BA starts from 0x0040
 		registers[1] <= 16'h4444;
 		registers[2] <= 16'h4443;
+		registers[3] <= 16'h4000;
+		registers[4] <= 16'h0000;
+		registers[5] <= 16'h0000;
+		registers[6] <= 16'hFFFD;
+		registers[7] <= 16'h0000;
 	end
 endmodule
 
@@ -67,6 +72,11 @@ module Control (
 	assign control_output[1] = 0;
 	assign control_output[0] = (opcode == 4'h0
 	|| opcode == 4'h1
+	|| opcode == 4'h2
+	|| opcode == 4'h3
+	|| opcode == 4'h4
+	|| opcode == 4'h5
+	|| opcode == 4'h6
 	);
 endmodule
 
@@ -108,7 +118,7 @@ module STAGE_ID (
 	wire[2:0] reg_read1, reg_read2;
 
 	//TODO slayttaki örnek 32 bit, bizim yapmamız gereken 16-bit, son bir defa doğru olduğuna kontrol et
-	assign reg_read1 = id_in[1][8:6];
+	assign reg_read1 = (id_in[1][15:12] == 4'h6) ? (id_in[1][11:9]) : (id_in[1][8:6]);
 	assign reg_read2 = id_in[1][5:3];
 	assign id_out[1] = reg_data1;
 	assign id_out[2] = reg_data2;

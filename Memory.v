@@ -58,6 +58,16 @@ module Memory(
 
 		//0000 011 010 001 XXX, 04E0h Add 011 010 001
 		data_instruction[200] = 16'h0688;
+		//0010 100 010 011 XXX, 24E0h Sub R100 R011 R010
+		data_instruction[210] = 16'h2898;
+		//0011 101 100 100000, 34C6h Addi R101 R100  "32"
+		data_instruction[220] = 16'h3B20;
+		//0100 110 110 000 XXX, 44E0h Mul R110 R110 R000
+		data_instruction[230] = 16'h4D80;
+		//0101 111 100 110 XXX, 54E0h And R111 R100 R110
+		data_instruction[240] = 16'h5F30;
+		//0110 111 000000001, 6409h Sll R111 "1"
+		data_instruction[250] = 16'h6E01;
 
 		/*
 		data_instruction[200] = 16'hD050; // CMP R010 R001
