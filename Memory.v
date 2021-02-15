@@ -3,7 +3,8 @@
 module Memory(
 	input clk,
 	input[11:0] address_bus,
-	inout[15:0] data_bus,
+	output[15:0] data_bus,
+	input[15:0] incoming_data_bus,
 	input write_mode,
 	input[11:0] Instruction_addressbus,
 	output[15:0] Instruction_databus
@@ -68,39 +69,46 @@ module Memory(
 		data_instruction[240] = 16'h5F30;
 		//0110 111 000000001, 6409h Sll R111 "1"
 		data_instruction[250] = 16'h6E01;
+		//0111 010 000001001, 7409h Lw R010 "BA+2x9"
+		data_instruction[260] = 16'h7409;
+		//1001 010 000001001, 9409h Sw R010 "BA+2x9"
+		data_instruction[270] = 16'h9409;
+		//1011 010 XXXXXXXXX, B400h CLR R010
+		data_instruction[280] = 16'hB400;
+		//1100 010 000001001, C409h Mov R010 "9"
+		data_instruction[290] = 16'hC409;
 
 		/*
 		data_instruction[200] = 16'hD050; // CMP R010 R001
 		data_instruction[201] = 16'hEFFF; // Bne (Pc + 2 x "-1")
 		*/
+		
 	// Memory Initialization
-
+		data1[9] <= 16'h0018;
 		data3[510] <= 16'habcd;
 	end
 
+	// Read Data
 	reg[15:0] data_bus_read;
+	assign data_bus = data_bus_read;
+	always @ * begin
+		case(address_bus[11:10])
+			2'b00: data_bus_read <= data_instruction[address_bus[9:1]];
+			2'b01: data_bus_read <= data1[address_bus[9:1]];
+			2'b10: data_bus_read <= data2[address_bus[9:1]];
+			2'b11: data_bus_read <= data3[address_bus[9:1]];
+		endcase
+	end
 
-	assign data_bus = write_mode ? 'bz : data_bus_read;
-
-	// Read/Write Data
+	// Write Data
 	always@(posedge clk) begin
 		case (write_mode)
-			1'b0: begin
-				//read mode
-				case(address_bus[11:10])
-					2'b00: data_bus_read <= data_instruction[address_bus[9:1]];
-					2'b01: data_bus_read <= data1[address_bus[9:1]];
-					2'b10: data_bus_read <= data2[address_bus[9:1]];
-					2'b11: data_bus_read <= data3[address_bus[9:1]];
-				endcase
-			end
 			1'b1: begin
-				//write mode
 				case(address_bus[11:10])
-					2'b00: data_instruction[address_bus[9:1]] <= data_bus;
-					2'b01: data1[address_bus[9:1]] <= data_bus;
-					2'b10: data2[address_bus[9:1]] <= data_bus;
-					2'b11: data3[address_bus[9:1]] <= data_bus;
+					2'b00: data_instruction[address_bus[9:1]] <= incoming_data_bus;
+					2'b01: data1[address_bus[9:1]] <= incoming_data_bus;
+					2'b10: data2[address_bus[9:1]] <= incoming_data_bus;
+					2'b11: data3[address_bus[9:1]] <= incoming_data_bus;
 				endcase
 			end
 		endcase

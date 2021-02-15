@@ -28,16 +28,16 @@ reg[15:0] cycle = 0;
 // temporary hard-code END
 
 wire[11:0] address_bus, Instruction_addressbus;
-wire[15:0] data_bus, Instruction_databus;
+wire[15:0] data_bus, Instruction_databus, incoming_data_bus;
 wire write_mode;
 
-Memory memory(clk, address_bus, data_bus, write_mode, Instruction_addressbus, Instruction_databus);
-BU2020 cpu(clk, address_bus, data_bus, write_mode, Instruction_addressbus, Instruction_databus);
+Memory memory(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus);
+BU2020 cpu(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus);
 
 
 initial begin
 	$dumpfile("TimingDiagram.vcd");
-	$dumpvars(0, cycle, memory, cpu, Instruction_addressbus, Instruction_databus, address_bus, data_bus, write_mode);
+	$dumpvars(0, cycle, memory, cpu, Instruction_addressbus, Instruction_databus, incoming_data_bus, address_bus, data_bus, write_mode);
 
  	// write_mode_reg <= 1'b1;
 
