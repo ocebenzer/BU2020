@@ -26,7 +26,7 @@ module STAGE_ID (
 	output[5:0][15:0] id_out,
 	input[15:0] wb_out_data,
 	input[2:0] wb_out_reg_address,
-	output[9:0] control_output,
+	output[11:0] control_output,
 	input register_write
 	);
 
@@ -37,10 +37,9 @@ module STAGE_ID (
 	wire[15:0] reg_data1, reg_data2;
 	wire[2:0] reg_read1, reg_read2;
 
-	//TODO slayttaki örnek 32 bit, bizim yapmamız gereken 16-bit, son bir defa doğru olduğuna kontrol et
 	assign reg_read1 = (id_in[1][15:12] == 4'h6) ? (id_in[1][11:9]):
 						(id_in[1][15:12] > 4'h6 &&  id_in[1][15:12] < 4'hB) ? 0 /*BA Register*/ : (id_in[1][8:6]);
-	assign reg_read2 = id_in[1][5:3];
+	assign reg_read2 = (id_in[1][15:12] == 4'h9 || id_in[1][15:12] == 4'hA) ? id_in[1][11:9] : id_in[1][5:3];
 	assign id_out[1] = reg_data1;
 	assign id_out[2] = reg_data2;
 
@@ -108,24 +107,27 @@ module STAGE_MEM (
 	input[15:0] Memory_databus,
 	output[15:0] Memory_incoming_data_bus,
 	output Memory_writemode,
-	input[2:0] mem_control_input,
+	input[4:0] mem_control_input,
 	input z_flag,
-	output PCSrc
-	//TODO Add input doubleRead Control path
+	output PCSrc,
+	output doubleRead,
+	output doubleWrite
 	);
 
 	assign PCSrc = (mem_control_input[0] == 1) ? 1
 					: (mem_control_input[1] == 1) ? !z_flag : 0;
 
 	assign Memory_addressbus = mem_in[2];
-	assign Memory_incoming_data_bus = mem_in[2];
+	assign Memory_incoming_data_bus = mem_in[3];
 
 	assign Memory_writemode = mem_control_input[2];
 
 	assign mem_out[0] = Memory_databus;
 	assign mem_out[1] = mem_in[2];
 	assign mem_out[2] = mem_in[4];
-	//TODO Memory needs 1 cycle to read, might be a problem
+
+	assign doubleRead = mem_control_input[4];
+	assign doubleWrite = mem_control_input[3];
 endmodule
 
 module STAGE_WB (

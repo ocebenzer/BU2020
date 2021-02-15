@@ -29,10 +29,10 @@ reg[15:0] cycle = 0;
 
 wire[11:0] address_bus, Instruction_addressbus;
 wire[15:0] data_bus, Instruction_databus, incoming_data_bus;
-wire write_mode;
+wire write_mode, doubleRead, doubleWrite;
 
-Memory memory(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus);
-BU2020 cpu(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus);
+BU2020 cpu(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus, doubleRead, doubleWrite);
+Memory memory(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus, doubleRead, doubleWrite);
 
 
 initial begin
