@@ -22,8 +22,8 @@ module Memory(
 	//Instruction Initialization
 
  		//jump to decimal 400 instructions, pass the next 15 instructions
-		data_instruction[0] = 16'hF0C8;
-
+		data_instruction[0] = 16'hF190;
+/*
 		//0000 010 011 100 XXX, 04E0h Add R010 R011 R100
 		data_instruction[5] = 16'h04E0;
 		//0001 010 011 000110, 14C6h Add R010 R011 memory(BA+"6")
@@ -56,7 +56,7 @@ module Memory(
 		data_instruction[140] = 16'hE100;
 		//1111 000000000000, F4ECh Jmp "2x0"
 		data_instruction[150] = 16'hF000;
-
+*/
 	// decimal 400 instructions start here
 
 		//0000 011 010 001 XXX, 04E0h Add 011 010 001
@@ -92,6 +92,18 @@ module Memory(
 		data_instruction[200] = 16'hD050; // CMP R010 R001
 		data_instruction[201] = 16'hEFFF; // Bne (Pc + 2 x "-1")
 		*/
+
+	//The ultimate script
+
+		data_instruction[400] = 16'hCEFF;	// Mov $111 0xFF
+		data_instruction[405] = 16'h6E04;	// Sll $111 "4"
+		data_instruction[410] = 16'h31C0;	// Addi $000 $111 0x0 - 0011 001 111 001010
+		data_instruction[411] = 16'h33CE;	// Addi $001 $111 0xE - 0011 000 111 001111
+		data_instruction[412] = 16'h35C0;	// Addi $010 $111 0x0 - 0011 010 111 000000
+		data_instruction[415] = 16'h3002;	// Addi $000 $000 "2" - 0011 000 000 000001 *LOOP
+		data_instruction[420] = 16'h9400;	// Sw $010 "0"
+		data_instruction[425] = 16'hD008;	// Cmp $000 $001 - D xxx 000 001 xxx
+		data_instruction[426] = 16'hEFF5;	// Bne 2 x "-11" - 1110 0x-11
 		
 	// Memory Initialization
 		data1[9] <= 16'h0018;
