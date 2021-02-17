@@ -70,6 +70,7 @@ module Memory(
 		//0101 111 100 110 XXX, 54E0h And R111 R100 R110
 		data_instruction[240] = 16'h5F30;
 		//0110 111 000000001, 6409h Sll R111 "1"
+
 		data_instruction[250] = 16'h6E01;
 		//0111 010 000001001, 7409h Lw R010 "BA+2x9"
 		data_instruction[260] = 16'h7409;
@@ -79,8 +80,6 @@ module Memory(
 		data_instruction[280] = 16'hB400;
 		//1100 010 000001001, C409h Mov R010 "9"
 		data_instruction[290] = 16'hC409;
-
-		
 		//1000 111 000110000, 8409h Lwi R111 "48"
 		data_instruction[350] = 16'h8E30;
 		//0011 111 111 000001, 34C6h Addi R111 R111  "1"
@@ -112,12 +111,12 @@ module Memory(
 		data1[510] <= 16'hcccc;
 		data1[511] <= 16'hbbbb;
 
-		/*
-		12 bit adres
-		2 bit -> blok
-		9 bit -> data
-		1 bit -> dont care
-		*/
+	/*
+	12 bit adres
+	2 bit -> blok
+	9 bit -> data
+	1 bit -> dont care
+	*/
 	end
 
 	// Read Data
@@ -134,6 +133,7 @@ module Memory(
 
 		case (doubleRead)
 			1'b1: begin
+			// if double read
 				case(data_bus_init_read[11:10])
 					2'b00: data_bus_final_read <= data_instruction[data_bus_init_read[9:1]];
 					2'b01: data_bus_final_read <= data1[data_bus_init_read[9:1]];
@@ -141,6 +141,7 @@ module Memory(
 					2'b11: data_bus_final_read <= data3[data_bus_init_read[9:1]];
 				endcase
 			end
+			// else
 			default: data_bus_final_read <= data_bus_init_read;
 		endcase
 	end
@@ -151,6 +152,7 @@ module Memory(
 			1'b1: begin
 				case (doubleWrite)
 					1'b1: begin
+					// if double write
 						case(data_bus_init_read[11:10])
 							2'b00: data_instruction[data_bus_init_read[9:1]] <= incoming_data_bus;
 							2'b01: data1[data_bus_init_read[9:1]] <= incoming_data_bus;
@@ -159,6 +161,7 @@ module Memory(
 						endcase
 					end
 					default: begin
+					// else
 						case(address_bus[11:10])
 							2'b00: data_instruction[address_bus[9:1]] <= incoming_data_bus;
 							2'b01: data1[address_bus[9:1]] <= incoming_data_bus;
