@@ -12,6 +12,8 @@ module ALU (
 	assign status_reg[11:0] = 0;
 	assign status_reg[15:12] = flags;
 	
+
+	// mul and sli need to be calculated outside
 	wire[31:0] mul, sll;
 	assign mul = data1*data2;
 	assign sll = data1 << data2[3:0];
@@ -29,7 +31,7 @@ module ALU (
 			end
 
 			3'b001: begin
-				outpt <= data1 + data2; //How are we suppose to do this
+				outpt <= data1 + data2; //TODO Find if we can do this, for now its "Add r1 r2 r3"
 			// handle status register for addition
 				flags[3] <= outpt == 0;
 				flags[2] <= outpt < 0;

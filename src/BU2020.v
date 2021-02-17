@@ -13,7 +13,7 @@ module BU2020 (
 	);
 
 
-	// Additional registers @ref Stages.v - Registers
+	// Additional registers @ref Registers.v
 		reg[15:0] PC = 16'h0000;
 		// Wires: "From PC" and "To PC"
 		wire[15:0] pc_from, pc_to;
@@ -98,7 +98,7 @@ module BU2020 (
 
 		wire pc_src;
 
-	// Register Stages
+	// Stages
 		STAGE_IF	_IF(clk, if_in, if_out, Instruction_addressbus, Instruction_databus, pc_from, pc_to, pc_src);
 		STAGE_ID	_ID(clk, id_in, id_out, wb_out_data, wb_out_reg_address, id_control_output, wb_control_input[0]);
 		STAGE_EX	_EX(clk, ex_in, ex_out, ex_control_input);
@@ -130,6 +130,4 @@ module BU2020 (
 			ID_EX__MEM = id_control_output[6:2];
 			ID_EX__EX = id_control_output[11:7];
 		end
-
-
 endmodule
