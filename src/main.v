@@ -14,14 +14,14 @@ BU2020 cpu(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instructio
 Memory memory(clk, address_bus, data_bus, incoming_data_bus, write_mode, Instruction_addressbus, Instruction_databus, doubleRead, doubleWrite);
 
 
-initial begin
-	$dumpfile("TimingDiagram.vcd");
-	$dumpvars(0, cycle, memory, cpu, Instruction_addressbus, Instruction_databus, incoming_data_bus, address_bus, data_bus, write_mode);
+// initial begin
+// 	$dumpfile("TimingDiagram.vcd");
+// 	$dumpvars(0, cycle, memory, cpu, Instruction_addressbus, Instruction_databus, incoming_data_bus, address_bus, data_bus, write_mode);
 
-	#4000
+// 	#4000
 
-	$finish;
-end
+// 	$finish;
+// end
 
 always begin
     #1;

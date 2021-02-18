@@ -28,14 +28,14 @@ module Registers (
 	end
 
 	// Initial register values
-	initial begin
-		registers[0] <= 16'h0400; // BA starts from 0x0400
-		registers[1] <= 16'h4444;
-		registers[2] <= 16'h4443;
-		registers[3] <= 16'h4000;
-		registers[4] <= 16'h0000;
-		registers[5] <= 16'h0000;
-		registers[6] <= 16'hFFFD;
-		registers[7] <= 16'h0000;
-	end
+	// initial begin
+	// 	registers[0] <= 16'h0400; // BA starts from 0x0400
+	// 	registers[1] <= 16'h4444;
+	// 	registers[2] <= 16'h4443;
+	// 	registers[3] <= 16'h4000;
+	// 	registers[4] <= 16'h0000;
+	// 	registers[5] <= 16'h0000;
+	// 	registers[6] <= 16'hFFFD;
+	// 	registers[7] <= 16'h0000;
+	// end
 endmodule
